@@ -6,7 +6,6 @@ const statesData = JSON.parse(
   fs.readFileSync(new URL('../data/statesData.json', import.meta.url))
 );
 
-// 🔁 Normalize state object field names to match test expectations
 function normalizeState(state) {
   return {
     state: state.state,
@@ -74,12 +73,19 @@ const getAdmission = (req, res) => {
 };
 
 const getRandomFunFact = async (req, res) => {
-  const dbState = await State.findOne({ stateCode: req.code });
-  if (!dbState || !dbState.funfacts || dbState.funfacts.length === 0) {
-    return res.status(404).json({ message: `No Fun Facts found for ${req.code}` });
+  const code = req.code;
+  const state = statesData.find(st => st.code === code);
+  if (!state) {
+    return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
   }
-  const rand = Math.floor(Math.random() * dbState.funfacts.length);
-  res.json({ funfact: dbState.funfacts[rand] });
+
+  const dbState = await State.findOne({ stateCode: code });
+  if (!dbState || !Array.isArray(dbState.funfacts) || dbState.funfacts.length === 0) {
+    return res.status(404).json({ message: `No Fun Facts found for ${state.state}` });
+  }
+
+  const random = dbState.funfacts[Math.floor(Math.random() * dbState.funfacts.length)];
+  res.json({ funfact: random });
 };
 
 const postFunFacts = async (req, res) => {
