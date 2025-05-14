@@ -21,11 +21,12 @@ const getAllStates = async (req, res) => {
   let mergedStates = statesData.map(normalizeState);
   const dbStates = await State.find();
 
-  mergedStates.forEach(state => {
+  mergedStates = mergedStates.map(state => {
     const match = dbStates.find(db => db.stateCode === state.code);
-    if (match && match.funfacts.length > 0) {
-      state.funfacts = match.funfacts;
+    if (match && match.funfacts?.length > 0) {
+      return { ...state, funfacts: match.funfacts };
     }
+    return { ...state };
   });
 
   if (req.query.contig === 'true') {
@@ -45,7 +46,7 @@ const getState = async (req, res) => {
   const state = normalizeState(rawState);
   const dbState = await State.findOne({ stateCode: code });
 
-  if (dbState && dbState.funfacts.length > 0) {
+  if (dbState?.funfacts?.length > 0) {
     state.funfacts = dbState.funfacts;
   }
 
@@ -75,12 +76,10 @@ const getAdmission = (req, res) => {
 const getRandomFunFact = async (req, res) => {
   const code = req.code;
   const state = statesData.find(st => st.code === code);
-  if (!state) {
-    return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
-  }
+  if (!state) return res.status(400).json({ message: 'Invalid state abbreviation parameter' });
 
   const dbState = await State.findOne({ stateCode: code });
-  if (!dbState || !Array.isArray(dbState.funfacts) || dbState.funfacts.length === 0) {
+  if (!dbState?.funfacts || dbState.funfacts.length === 0) {
     return res.status(404).json({ message: `No Fun Facts found for ${state.state}` });
   }
 
@@ -109,7 +108,7 @@ const patchFunFact = async (req, res) => {
   if (!funfact) return res.status(400).json({ message: 'State fun fact value required' });
 
   const dbState = await State.findOne({ stateCode: req.code });
-  if (!dbState || !dbState.funfacts || dbState.funfacts.length === 0) {
+  if (!dbState?.funfacts || dbState.funfacts.length === 0) {
     return res.status(404).json({ message: `No Fun Facts found for ${req.code}` });
   }
 
@@ -127,7 +126,7 @@ const deleteFunFact = async (req, res) => {
   if (!index) return res.status(400).json({ message: 'State fun fact index value required' });
 
   const dbState = await State.findOne({ stateCode: req.code });
-  if (!dbState || !dbState.funfacts || dbState.funfacts.length === 0) {
+  if (!dbState?.funfacts || dbState.funfacts.length === 0) {
     return res.status(404).json({ message: `No Fun Facts found for ${req.code}` });
   }
 
