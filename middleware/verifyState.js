@@ -4,15 +4,15 @@ const statesData = JSON.parse(
   fs.readFileSync(new URL('../data/statesData.json', import.meta.url))
 );
 
-const stateCodes = statesData.map(state => state.code.toUpperCase());
+const validCodes = statesData.map(state => state.code.toUpperCase());
 
 export const verifyState = (req, res, next) => {
-  const code = req.params.state?.toUpperCase();
+  const input = req.params.state?.toUpperCase();
 
-  if (!stateCodes.includes(code)) {
+  if (!validCodes.includes(input)) {
     return res.status(400).json({ message: 'Invalid state abbreviation parameter' });
   }
 
-  req.code = code;
+  req.code = input; // normalized 2-letter uppercase
   next();
 };
