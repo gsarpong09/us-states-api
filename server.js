@@ -1,8 +1,19 @@
+// server.js
 import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import connectDB from './config/dbConn.js';
+import statesRoutes from './routes/states.js';
+import { verifyState } from './middleware/verifyState.js'; // optional inlined
+
+dotenv.config();
 const app = express();
+connectDB();
+
+app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,6 +21,8 @@ const __dirname = path.dirname(__filename);
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+app.use('/states', statesRoutes);
 
 app.all('*', (req, res) => {
   res.status(404);
@@ -22,5 +35,5 @@ app.all('*', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
