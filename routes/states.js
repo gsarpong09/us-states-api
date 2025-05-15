@@ -1,32 +1,35 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import {
+  getAllStates,
+  getState,
+  getCapital,
+  getNickname,
+  getPopulation,
+  getAdmission,
+  getRandomFunFact,
+  postFunFacts,
+  patchFunFact,
+  deleteFunFact
+} from '../controllers/statesController.js';
+import { verifyState } from '../middleware/verifyState.js';
 
-import statesRoutes from './routes/states.js';
-import { notFoundHandler } from './middleware/notFound.js';
-import connectDB from './config/dbConn.js';
+const router = express.Router();
 
-const app = express();
-dotenv.config();
-connectDB();
+router.route('/')
+  .get(getAllStates);
 
-app.use(express.json());
+router.route('/:state')
+  .get(verifyState, getState);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+router.route('/:state/funfact')
+  .get(verifyState, getRandomFunFact)
+  .post(verifyState, postFunFacts)
+  .patch(verifyState, patchFunFact)
+  .delete(verifyState, deleteFunFact);
 
-// Serve homepage
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+router.get('/:state/capital', verifyState, getCapital);
+router.get('/:state/nickname', verifyState, getNickname);
+router.get('/:state/population', verifyState, getPopulation);
+router.get('/:state/admission', verifyState, getAdmission);
 
-// API routes
-app.use('/states', statesRoutes);
-
-// Catch-all for undefined routes
-app.use(notFoundHandler);
-
-const PORT = process.env.PORT || 3500;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+export default router;

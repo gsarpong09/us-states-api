@@ -1,4 +1,3 @@
-// middleware/verifyState.js
 import fs from 'fs';
 
 const statesData = JSON.parse(
