@@ -1,5 +1,6 @@
-import express from 'express';
-import {
+const express = require('express');
+const router = express.Router();
+const {
   getAllStates,
   getState,
   getCapital,
@@ -10,10 +11,8 @@ import {
   postFunFacts,
   patchFunFact,
   deleteFunFact
-} from '../controllers/statesController.js';
-import { verifyState } from '../middleware/verifyState.js';
-
-const router = express.Router();
+} = require('../controllers/statesController');
+const verifyState = require('../middleware/verifyState');
 
 router.route('/')
   .get(getAllStates);
@@ -32,4 +31,4 @@ router.get('/:state/nickname', verifyState, getNickname);
 router.get('/:state/population', verifyState, getPopulation);
 router.get('/:state/admission', verifyState, getAdmission);
 
-export default router;
+module.exports = router;
