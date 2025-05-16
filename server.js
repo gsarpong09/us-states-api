@@ -1,22 +1,18 @@
-// server.js
-import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-import connectDB from './config/dbConn.js';
-import statesRoutes from './routes/states.js';
-import { verifyState } from './middleware/verifyState.js'; // optional inlined
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const path = require('path');
+
+const connectDB = require('./config/dbConn');
+const statesRoutes = require('./routes/states');
+const verifyState = require('./middleware/verifyState');
 
 dotenv.config();
 const app = express();
 connectDB();
 
 app.use(express.json());
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
