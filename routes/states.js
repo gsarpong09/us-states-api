@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const {
   getAllStates,
   getState,
@@ -13,6 +12,8 @@ const {
   deleteFunFact
 } = require('../controllers/statesController');
 const verifyState = require('../middleware/verifyState');
+
+const router = express.Router();
 
 router.route('/')
   .get(getAllStates);
