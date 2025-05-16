@@ -1,13 +1,13 @@
-// middleware/verifyState.js
-import fs from 'fs';
+const fs = require('fs');
+const path = require('path');
 
 const statesData = JSON.parse(
-  fs.readFileSync(new URL('../data/statesData.json', import.meta.url))
+  fs.readFileSync(path.join(__dirname, '../data/statesData.json'))
 );
 
 const stateCodes = statesData.map(state => state.code.toUpperCase());
 
-export const verifyState = (req, res, next) => {
+const verifyState = (req, res, next) => {
   const code = req.params.state?.toUpperCase();
 
   if (!stateCodes.includes(code)) {
@@ -17,3 +17,5 @@ export const verifyState = (req, res, next) => {
   req.code = code; // Store normalized code
   next();
 };
+
+module.exports = verifyState;
