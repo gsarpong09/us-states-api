@@ -1,9 +1,9 @@
-// controllers/statesController.js
-import fs from 'fs';
-import State from '../models/States.js';
+const fs = require('fs');
+const path = require('path');
+const State = require('../models/States');
 
 const statesData = JSON.parse(
-  fs.readFileSync(new URL('../data/statesData.json', import.meta.url))
+  fs.readFileSync(path.join(__dirname, '../data/statesData.json'))
 );
 
 function normalizeState(raw) {
@@ -148,7 +148,7 @@ const deleteFunFact = async (req, res) => {
   res.json(db);
 };
 
-export {
+module.exports = {
   getAllStates,
   getState,
   getCapital,
