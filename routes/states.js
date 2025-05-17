@@ -1,7 +1,5 @@
-// routes/states.js (CommonJS)
+// routes/states.js
 const express = require('express');
-const router = express.Router();
-
 const {
   getAllStates,
   getState,
@@ -14,25 +12,22 @@ const {
   patchFunFact,
   deleteFunFact
 } = require('../controllers/statesController');
-
 const verifyState = require('../middleware/verifyState');
 
-// Route: /states/
+const router = express.Router();
+
 router.route('/')
   .get(getAllStates);
 
-// Route: /states/:state
 router.route('/:state')
   .get(verifyState, getState);
 
-// Route: /states/:state/funfact
 router.route('/:state/funfact')
   .get(verifyState, getRandomFunFact)
   .post(verifyState, postFunFacts)
   .patch(verifyState, patchFunFact)
   .delete(verifyState, deleteFunFact);
 
-// Other /states/:state/X routes
 router.get('/:state/capital', verifyState, getCapital);
 router.get('/:state/nickname', verifyState, getNickname);
 router.get('/:state/population', verifyState, getPopulation);
