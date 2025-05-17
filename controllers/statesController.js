@@ -4,7 +4,7 @@ const path = require('path');
 const State = require('../models/States');
 
 const statesData = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '../data/statesData.json'))
+  fs.readFileSync(path.join(__dirname, '..', 'data', 'statesData.json'))
 );
 
 function normalizeState(raw) {
@@ -100,7 +100,7 @@ const getRandomFunFact = async (req, res) => {
 const postFunFacts = async (req, res) => {
   const facts = req.body.funfacts;
   if (!facts || !Array.isArray(facts)) {
-    return res.status(400).json({ message: 'State fun facts value required' });
+    return res.status(400).json({ message: 'State fun facts value must be an array' });
   }
 
   const updated = await State.findOneAndUpdate(
@@ -114,7 +114,7 @@ const postFunFacts = async (req, res) => {
 
 const patchFunFact = async (req, res) => {
   const { index, funfact } = req.body;
-  if (!index) return res.status(400).json({ message: 'State fun fact index value required' });
+  if (index == null) return res.status(400).json({ message: 'State fun fact index value required' });
   if (!funfact) return res.status(400).json({ message: 'State fun fact value required' });
 
   const db = await State.findOne({ stateCode: req.code });
@@ -133,7 +133,7 @@ const patchFunFact = async (req, res) => {
 
 const deleteFunFact = async (req, res) => {
   const { index } = req.body;
-  if (!index) return res.status(400).json({ message: 'State fun fact index value required' });
+  if (index == null) return res.status(400).json({ message: 'State fun fact index value required' });
 
   const db = await State.findOne({ stateCode: req.code });
   if (!db?.funfacts?.length) {

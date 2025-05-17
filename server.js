@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -9,21 +8,17 @@ const statesRoutes = require('./routes/states');
 const verifyState = require('./middleware/verifyState');
 
 dotenv.config();
-
 const app = express();
 connectDB();
 
 app.use(express.json());
 
-// Serve root index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// API Routes
 app.use('/states', statesRoutes);
 
-// 404 handler
 app.all('*', (req, res) => {
   res.status(404);
   if (req.accepts('html')) {
@@ -35,6 +30,5 @@ app.all('*', (req, res) => {
   }
 });
 
-// Start server
-const PORT = process.env.PORT || 3500;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

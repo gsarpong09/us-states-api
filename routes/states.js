@@ -1,36 +1,28 @@
-// routes/states.js
+// routes/states.js (CommonJS)
 const express = require('express');
-const {
-  getAllStates,
-  getState,
-  getCapital,
-  getNickname,
-  getPopulation,
-  getAdmission,
-  getRandomFunFact,
-  postFunFacts,
-  patchFunFact,
-  deleteFunFact
-} = require('../controllers/statesController');
+const router = express.Router();
+const statesController = require('../controllers/statesController');
 const verifyState = require('../middleware/verifyState');
 
-const router = express.Router();
-
+// /states/
 router.route('/')
-  .get(getAllStates);
+  .get(statesController.getAllStates);
 
+// /states/:state
 router.route('/:state')
-  .get(verifyState, getState);
+  .get(verifyState, statesController.getState);
 
+// /states/:state/funfact
 router.route('/:state/funfact')
-  .get(verifyState, getRandomFunFact)
-  .post(verifyState, postFunFacts)
-  .patch(verifyState, patchFunFact)
-  .delete(verifyState, deleteFunFact);
+  .get(verifyState, statesController.getRandomFunFact)
+  .post(verifyState, statesController.postFunFacts)
+  .patch(verifyState, statesController.patchFunFact)
+  .delete(verifyState, statesController.deleteFunFact);
 
-router.get('/:state/capital', verifyState, getCapital);
-router.get('/:state/nickname', verifyState, getNickname);
-router.get('/:state/population', verifyState, getPopulation);
-router.get('/:state/admission', verifyState, getAdmission);
+// /states/:state/[property]
+router.get('/:state/capital', verifyState, statesController.getCapital);
+router.get('/:state/nickname', verifyState, statesController.getNickname);
+router.get('/:state/population', verifyState, statesController.getPopulation);
+router.get('/:state/admission', verifyState, statesController.getAdmission);
 
 module.exports = router;
