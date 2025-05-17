@@ -5,20 +5,23 @@ const path = require('path');
 
 const connectDB = require('./config/dbConn');
 const statesRoutes = require('./routes/states');
-const verifyState = require('./middleware/verifyState');
 
 dotenv.config();
 const app = express();
+
 connectDB();
 
 app.use(express.json());
 
+// Serve HTML file at root
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Routes
 app.use('/states', statesRoutes);
 
+// Fallback 404
 app.all('*', (req, res) => {
   res.status(404);
   if (req.accepts('html')) {
@@ -30,5 +33,5 @@ app.all('*', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
