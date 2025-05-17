@@ -1,3 +1,4 @@
+// controllers/statesController.js (CommonJS)
 const fs = require('fs');
 const path = require('path');
 const State = require('../models/States');
