@@ -1,4 +1,7 @@
+// routes/states.js (CommonJS)
 const express = require('express');
+const router = express.Router();
+
 const {
   getAllStates,
   getState,
@@ -11,25 +14,33 @@ const {
   patchFunFact,
   deleteFunFact
 } = require('../controllers/statesController');
+
 const verifyState = require('../middleware/verifyState');
 
-const router = express.Router();
+// GET all states or filter by contig query
+router.route('/').get(getAllStates);
 
-router.route('/')
-  .get(getAllStates);
+// GET one state
+router.route('/:state').get(verifyState, getState);
 
-router.route('/:state')
-  .get(verifyState, getState);
-
-router.route('/:state/funfact')
+// GET / POST / PATCH / DELETE funfacts
+router
+  .route('/:state/funfact')
   .get(verifyState, getRandomFunFact)
   .post(verifyState, postFunFacts)
   .patch(verifyState, patchFunFact)
   .delete(verifyState, deleteFunFact);
 
+// GET capital
 router.get('/:state/capital', verifyState, getCapital);
+
+// GET nickname
 router.get('/:state/nickname', verifyState, getNickname);
+
+// GET population
 router.get('/:state/population', verifyState, getPopulation);
+
+// GET admission date
 router.get('/:state/admission', verifyState, getAdmission);
 
 module.exports = router;
