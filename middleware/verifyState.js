@@ -14,7 +14,7 @@ const verifyState = (req, res, next) => {
     return res.status(400).json({ message: 'Invalid state abbreviation parameter' });
   }
 
-  req.code = code; // Store normalized code
+  req.code = code; // Attach normalized state code to request
   next();
 };
 
