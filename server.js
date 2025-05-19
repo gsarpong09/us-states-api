@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
+const cors = require('cors'); // <-- Add this
 
 const connectDB = require('./config/dbConn');
 const statesRoutes = require('./routes/states');
@@ -9,19 +10,18 @@ const statesRoutes = require('./routes/states');
 dotenv.config();
 const app = express();
 
+app.use(cors()); // <-- Enable CORS for all routes
+
 connectDB();
 
 app.use(express.json());
 
-// Serve HTML file at root
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Routes
 app.use('/states', statesRoutes);
 
-// Fallback 404
 app.all('*', (req, res) => {
   res.status(404);
   if (req.accepts('html')) {
